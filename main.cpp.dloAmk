@@ -1,0 +1,212 @@
+#include <iostream>
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+#include <background.cpp>
+#include <cmath>
+
+
+sf::RenderWindow game;
+ int pred=150;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ int main() {
+    // create the window
+   sf::RenderWindow game(sf::VideoMode(1000,768), "My window");
+
+    sf::Texture texture;
+    if(!texture.loadFromFile("ludzik.jpg")){
+        std::cout<<"Load failed"<<std::endl;
+        system("pause");
+    }
+    sf::Sprite gracz;
+    gracz.setTexture(texture);
+    //gracz.setPosition(50,150);
+    sf::View            View(game.getDefaultView());
+        sf::FloatRect       fBounds(0.f, 0.f, 1500.f, 1000.f); // arbitrary > view height
+
+
+
+            // move sprite 'up' by its height except the view height for start:
+
+
+
+
+         sf::Texture text;
+          sf::IntRect         iBounds(fBounds);
+         text.setRepeated(true);
+         if(!text.loadFromFile("background_drz.jpg")){
+             std::cout<<"Load failed"<<std::endl;
+             system("pause");
+         }
+         sf::Sprite sp(text,iBounds);
+           sp.setPosition(fBounds.left, fBounds.top - 1000.f + View.getSize().y);
+        // sf::View view(sf::FloatRect(200,200,300,200));
+
+
+         float viewOffsetx= 0;
+         float spriteOffsetx = 0;
+         unsigned int texturewidth = text.getSize().x;
+         const sf::Vector2f viewStart(fBounds.left + (fBounds.width / 2), fBounds.top + (fBounds.height / 2));
+                 const sf::Vector2f spriteStart(fBounds.left, fBounds.top);
+
+
+        //sf::View view;
+        //View.setViewport(sf::FloatRect(0.f,0.f,1.7f, 1.7f));
+
+
+float   accumulatemoves(View.getSize().y);
+
+
+
+
+
+
+
+
+
+
+    // sf::View widok;
+
+
+    // create some shapes
+
+
+    sf::Clock clock;
+    // run the program as long as the window is open
+    while (game.isOpen()) {
+        // check all the window's events that were triggered since the last iteration of the loop
+        sf::Event event;
+
+        while (game.pollEvent(event)) {
+
+
+            // "close requested" event: we close the window
+            if (event.type == sf::Event::Closed)
+                game.close();
+            if(sf::Event::KeyReleased){
+               // view.reset(sf::FloatRect(200,200,800,400));
+               //view.setCenter(0,400);
+            }
+        }
+
+
+
+  sf::Time elapsed=clock.restart();
+float time= elapsed.asSeconds();
+        // clear the window with black color
+
+sf::FloatRect gracz_bounds = gracz.getGlobalBounds();
+//sf::FloatRect view_bounds = sp.getGlobalBounds();
+game.clear(sf::Color::Black);
+      //view.setCenter(200.f, 200.f);
+         //game.setView(view);
+
+        // draw everything here...
+       // game.draw(sp);
+       // game.draw(gracz);
+
+        // gracz.move(time*pred,0);
+
+         //View.setCenter(500.f, 500.f - viewOffsetx); // negative y to move 'up' along sprite height
+         //View.setViewport(sf::FloatRect(0.f,0.f,1.7f, 1.7f));
+
+          //viewOffsetx += 0.3f; // speed of view movement
+             //spriteOffsetx = floor(viewOffsetx / texturewidth) * texturewidth;
+              // sp.setPosition(fBounds.left+fBounds.width, fBounds.left+fBounds.width /* - 1000.f + View.getSize().y */ - spriteOffsetx);
+
+
+               View.move(0.2f, 0.f); // just move the view here in any direction-the tiles will follow automatically
+             const sf::Vector2f viewOffset(viewStart - View.getCenter());
+              sf::Vector2f spriteOffset;
+                spriteOffset.x = floor(viewOffset.x / text.getSize().x) * text.getSize().x;
+                    spriteOffset.y = floor(viewOffset.y / text.getSize().y) * text.getSize().y;
+                   sp.setPosition(spriteStart - spriteOffset);
+
+                   if (sp.getTextureRect().height <= accumulatemoves) {
+
+                                           sp.move(-sp.getTextureRect().width+View.getSize().x,0.f );
+                                           accumulatemoves = View.getSize().y;
+                                   }
+
+                   ++accumulatemoves;
+               game.setView(View);
+              game.draw(sp);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // move the view by an offset of (100, 100) (so its final position is (300, 300))
+       //sp.move(time*50.f,0);
+        // view.move(time*150.f, 0);
+
+
+        /*if(sp.getPosition().x>799){
+           //view.setViewport(sf::FloatRect(0.f,0.f,1.7f, 1.7f));
+            sp.setPosition(800,0);
+          view.move(time*150.f, 0);
+        }*/
+
+         /*if(sp.getPosition().x>sp.getGlobalBounds().width){
+             sf::Vector2f position(game.getSize().x,0);
+             sp.setPosition(position);
+
+         }*/
+
+
+
+        if(gracz_bounds.left<0){
+            pred=std::abs(pred);
+
+        }
+       /* if(gracz_bounds.left+gracz_bounds.width>799){
+        pred=-std::abs(pred);
+
+        }*/
+
+       game.display();
+    }
+
+    return 0;
+}
+
+

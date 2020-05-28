@@ -1,0 +1,147 @@
+#include <iostream>
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+#include <background.cpp>
+
+
+sf::RenderWindow game;
+ int pred=150;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ int main() {
+    // create the window
+   sf::RenderWindow game(sf::VideoMode(800, 400), "My window");
+
+    sf::Texture texture;
+    if(!texture.loadFromFile("ludzik.jpg")){
+        std::cout<<"Load failed"<<std::endl;
+        system("pause");
+    }
+    sf::Sprite gracz;
+    gracz.setTexture(texture);
+    //gracz.setPosition(50,150);
+
+         sf::Texture text;
+         if(!text.loadFromFile("background_drz.jpg")){
+             std::cout<<"Load failed"<<std::endl;
+             system("pause");
+         }
+         sf::Sprite sp(text);
+        // sf::View view(sf::FloatRect(200,200,300,200));
+
+        // sf::View view;
+        // view.setViewport(sf::FloatRect(0.f,0.f,1.7f, 1.7f));
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // sf::View widok;
+
+
+    // create some shapes
+
+
+    sf::Clock clock;
+    // run the program as long as the window is open
+    while (game.isOpen()) {
+        // check all the window's events that were triggered since the last iteration of the loop
+        sf::Event event;
+
+        while (game.pollEvent(event)) {
+
+
+            // "close requested" event: we close the window
+            if (event.type == sf::Event::Closed)
+                game.close();
+            if(sf::Event::KeyReleased){
+               // view.reset(sf::FloatRect(200,200,800,400));
+               //view.setCenter(0,400);
+            }
+        }
+
+
+
+  sf::Time elapsed=clock.restart();
+float time= elapsed.asSeconds();
+        // clear the window with black color
+
+sf::FloatRect gracz_bounds = gracz.getGlobalBounds();
+//sf::FloatRect view_bounds = sp.getGlobalBounds();
+game.clear(sf::Color::Black);
+      //view.setCenter(200.f, 200.f);
+        // game.setView(view);
+
+        // draw everything here...
+        //game.draw(sp);
+        //game.draw(gracz);
+
+        // gracz.move(time*pred,0);
+
+         background bg;
+         bg.drawbg(game);
+
+         bg.movebg(time,game);
+
+
+
+
+        // move the view by an offset of (100, 100) (so its final position is (300, 300))
+      // sp.move(time*50.f,0);
+        // view.move(time*80.f, 0);
+
+       /* if(sp.getPosition().x>799){
+           //view.setViewport(sf::FloatRect(0.f,0.f,1.7f, 1.7f));
+            sp.setPosition(800,0);
+          view.move(time*150.f, 0);
+        }*/
+
+
+        if(gracz_bounds.left<0){
+            pred=std::abs(pred);
+
+        }
+        if(gracz_bounds.left+gracz_bounds.width>799){
+        pred=-std::abs(pred);
+
+        }
+
+       game.display();
+    }
+
+    return 0;
+}
+
+
