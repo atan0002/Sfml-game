@@ -4,7 +4,7 @@
 #include <background.cpp>
 
 
-class barriers
+class enemies
 {
 public:
     barriers();

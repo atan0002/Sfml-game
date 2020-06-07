@@ -1,5 +1,5 @@
 TEMPLATE = app
-CONFIG += console c++11
+CONFIG += console c++17
 CONFIG -= app_bundle
 CONFIG -= qt
 INCLUDEPATH += "C:/SFML-2.5.1/include"
@@ -13,8 +13,10 @@ CONFIG(debug, debug|release){
 
 SOURCES += \
         background.cpp \
-        barriers.cpp \
+        bullet.cpp \
+        enemies.cpp \
         main.cpp \
+        platform.cpp \
         player.cpp
 
 DISTFILES += \
@@ -22,5 +24,7 @@ DISTFILES += \
 
 HEADERS += \
     background.h \
-    barriers.h \
+    bullet.h \
+    enemies.h \
+    platform.h \
     player.h
