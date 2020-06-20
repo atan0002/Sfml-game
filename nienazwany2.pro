@@ -13,18 +13,26 @@ CONFIG(debug, debug|release){
 
 SOURCES += \
         background.cpp \
+        bird.cpp \
         bullet.cpp \
         enemies.cpp \
+        life.cpp \
         main.cpp \
+        monkey.cpp \
         platform.cpp \
-        player.cpp
+        player.cpp \
+        startend.cpp
 
 DISTFILES += \
     ../../Desktop/ludzik.jpg
 
 HEADERS += \
     background.h \
+    bird.h \
     bullet.h \
     enemies.h \
+    life.h \
+    monkey.h \
     platform.h \
-    player.h
+    player.h \
+    startend.h

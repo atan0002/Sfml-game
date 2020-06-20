@@ -6,53 +6,45 @@
 player::player(const sf::Vector2f &position)
 {
  setPosition(position);
+ if(!texture.loadFromFile("ludzik.png")){
+     std::cout<<"Load failed"<<std::endl;
+     system("pause");
+ }
+ setTexture(texture);
 
 
 }
 
-void player::moveplayer(sf::Time &elapsed,sf::View &v,std::vector<std::unique_ptr<Platform>> &p,
-         sf::Sprite &s){
+void player::moveplayer(sf::Time &elapsed,std::vector<std::unique_ptr<Platform>> &p, sf::Sprite &s){
 
 
     auto bounds = getGlobalBounds();
-    float t = elapsed.asSeconds();
-    //(bounds.top+bounds.height<bounds_bottom_-50)
- if((bounds.top+bounds.height<bounds_bottom_-50)&& gravity==true){
-    //gravity
-     collision_p=false;
-     //collides = false;
-        v_y += elapsed.asSeconds() *  a_y_;
-  move(0, std::abs(v_y) * elapsed.asSeconds());
+     t = elapsed.asSeconds();
 
-  //jump=false;
-
-}
-
+//warunek sprawdzający czy pozycja gracza jest w polu gracza i czy nie skacze czy nie koliduje z platfromą
+//i czy nie ma kolizji podczas kolizji zwiazanych z pojsciem w prawo albo w lewo
+//lub gdy pozycja gracza zajduje sie w polu gry i jest wlaczona grawitacja i nie koliduje z innymi przyciskami
+//wtedy działa grawitacja
+// w innym przypadku włączony jest skok i kolizje
     if((!(this->getGlobalBounds().top+this->getGlobalBounds().height>bounds_bottom_-30
-          )&& !jump &&  !collision_p && !collides ) ){
+          )&& !jump &&  !collision_p && !collides ) || (gravity&&
+            !(this->getGlobalBounds().top+this->getGlobalBounds().height>bounds_bottom_-30) && !collides) ){
         v_y += elapsed.asSeconds() *  a_y_;
-  move(0, std::abs(v_y) * elapsed.asSeconds());
-  //gravity=true;
+ move(0, std::abs(v_y) * elapsed.asSeconds());
+
 
     }
     else{
-        v_y=15;
+
+        v_y=10;
         jump=true;
         collision_p=true;
-        gravity=true;
+
         collides=true;
+
     }
 
-/*
-  for(auto &el:p)
-     {
 
-        if( !(el->getGlobalBounds().intersects(this->getGlobalBounds()))){
-         collision_p=false;
-        }
-
-
-}*/
 
 
    for(auto &el:p)
@@ -61,10 +53,8 @@ void player::moveplayer(sf::Time &elapsed,sf::View &v,std::vector<std::unique_pt
                )
         {
 
-           // move(0,-t*v_y);
-           //collision_p=true;
-           //gravity=false;
 
+            move(0,-t*v_c);
 
              if(this->getGlobalBounds().top+this->getGlobalBounds().height>el->getGlobalBounds().top){
 
@@ -75,15 +65,15 @@ void player::moveplayer(sf::Time &elapsed,sf::View &v,std::vector<std::unique_pt
 
              }
               if((el->getGlobalBounds().top+el->getGlobalBounds().height+2)>this->getGlobalBounds().top){
-           // collides=true;(el->getPosition().x>this->getPosition().x )&&(el->getPosition().x+55<this->getPosition().x) &&
-                 //(el->getPosition().y+16>this->getPosition().y)
+
 
                v_c=std::abs(v_c);
                collides=true;
-              // collision_p=true;
+
 
               }
-             move(0,-t*v_c);
+
+
 
         }
 
@@ -92,22 +82,16 @@ void player::moveplayer(sf::Time &elapsed,sf::View &v,std::vector<std::unique_pt
 
 
 
-
+//poruszanie w lewa strone
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)&&(bounds.left>bounds_left_+2)
      ){
 
  collides = false;
  move(t*-std::abs(v_x),0);
- direction="left";
-// v.move(-150,0);
-     //zrobic tak zeby z lewej strony sie blokował i nie mogł isc dalej && v.getViewport().left<this->getPosition().x
+ setTexture(texture3);
+ direction=-1;
 
-      //  v.move(t*-std::abs(1.05*v_x),0); && (v.getViewport().left>s.getGlobalBounds().left)
-      /*  if(v.getViewport().left>this->getGlobalBounds().left){
-            v.move(0,0);
-            this->setPosition(v.getViewport().left+getGlobalBounds().width,this->getPosition().y);
-        }
-*/
+
         for(auto &el:p)
         {
             if(el->getGlobalBounds().intersects(this->getGlobalBounds()))
@@ -119,14 +103,18 @@ void player::moveplayer(sf::Time &elapsed,sf::View &v,std::vector<std::unique_pt
         }
 
     }
+    //poruszanie w prawo
     if((sf::Keyboard::isKeyPressed(sf::Keyboard::Right))&&
-            this->getGlobalBounds().left+getGlobalBounds().width>s.getGlobalBounds().left+getGlobalBounds().width)
+            this->getGlobalBounds().left+getGlobalBounds().width<(s.getGlobalBounds().left+s.getGlobalBounds().width)-600)
     {
          collides = false;
         move(t*std::abs(v_x),0);
-      // v.move(t*std::abs(0.9*v_x),0);
-        //v.setCenter(this->getPosition().x,0);
-        direction="right";
+ setTexture(texture2);
+
+
+
+
+        direction=1;
 
         for(auto &el:p)
         {
@@ -147,31 +135,16 @@ void player::moveplayer(sf::Time &elapsed,sf::View &v,std::vector<std::unique_pt
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)&&(bounds.top>bounds_top_+53)
           &&jump==true )
     {
-        // &&(getGlobalBounds().top+getGlobalBounds().height)<bounds_bottom_
-      // move(0,(-150));
-      // jump=true;
-    /*   if( (((getGlobalBounds().top+getGlobalBounds().height)>bounds_bottom_))){
-           move(0,-150);
 
-          */
-
-        /*if(((getGlobalBounds().top+getGlobalBounds().height)<bounds_bottom_)
-              ){
-            move(0,-150);
-
-        }*/
-        //move(0,-50);(el->getGlobalBounds().top>this->getGlobalBounds().top+getGlobalBounds().height)&&
-
+        collides=false;
       for(auto &el:p){
 
 
-     if( ((el->getGlobalBounds().top<this->getGlobalBounds().top+getGlobalBounds().height)&& collision_p==true ) ||
+     if( ((el->getGlobalBounds().top<this->getGlobalBounds().top+getGlobalBounds().height)&& collision_p==true )
+      ||  (( getGlobalBounds().top+getGlobalBounds().height)>bounds_bottom_-30)){
 
-            ( getGlobalBounds().top+getGlobalBounds().height)>bounds_bottom_-30 ){
 
 
-//gravity=false;
-          //jump=true;
 collides = true;
       }
 
@@ -195,13 +168,11 @@ jump=false;
 
 
 
-}
-
-void player::drawplayer(sf::RenderWindow &window){
-
 
 
 }
+
+
 
 void player:: setAcceleration(float acceleration_x, float acceleration_y) {
         a_x_ = acceleration_x;
@@ -232,3 +203,49 @@ void player::shoot(){
     }
 
 }
+
+void player::display_lifes(sf::RenderWindow &w, int l,sf::Sprite &s){
+
+    sf::Font font;
+    if(!font.loadFromFile("arial.ttf")){
+        exit(-1);
+}
+    std::stringstream ss;
+       ss << l;
+        std::string str = ss.str();
+
+
+
+   sf::Text text;
+   text.setFont(font);
+   text.setCharacterSize(25);
+   text.setString(str.c_str());
+   text.setPosition(s.getPosition().x+200-(w.getSize().x/2),10);
+
+
+    w.draw(text);
+
+}
+
+void player::loadtex(){
+
+
+     if(!texture.loadFromFile("ludzik.png")){
+         std::cout<<"Load failed"<<std::endl;
+         system("pause");
+     }
+
+      if(!texture2.loadFromFile("ludzik_prawo.png")){
+          std::cout<<"Load failed"<<std::endl;
+          system("pause");
+      }
+
+       if(!texture3.loadFromFile("ludzik_lewo.png")){
+           std::cout<<"Load failed"<<std::endl;
+           system("pause");
+       }
+
+
+}
+
+

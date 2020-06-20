@@ -3,21 +3,31 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include<random>
+#include <iostream>
 
 
 class enemies:public sf::Sprite
 {
     int v_x=100;
     std::vector<int> position;
+     sf::Texture tex_wrog;
+     double pos;
+     sf::Texture tex_wrog_lewo;
 
+    sf::Texture tex_wrog_prawo;
 
 public:
     enemies();
+
     bool shoot_=false;
-    std::string direction;
-    void  move_enemy(sf::Time &elapsed,sf::RenderWindow &w,sf::Texture & t1,sf::Texture &t2);
-    void setting_position(sf::Sprite &s);
+    int direction=0;
+
+    void  move_enemy(sf::Time &elapsed);
+    void setting_position();
     void shoot(sf::Sprite &s);
+    int counter=0;
+    bool set_pos=true;
+    void loadtex();
 
 };
 

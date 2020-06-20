@@ -10,16 +10,21 @@ class bullet:public sf::Sprite
 {
 
 int v_x=250;
-std::vector<int> position;
+
 double position_;
+ sf::Texture tex_bullet;
+
 
 public:
     bullet();
+
     void  setting_position(int pos_x,int pos_y);
-  void move_bullet(std::string direction,sf::Time &elapsed,sf::Sprite &s);
+  void move_bullet(int direction,sf::Time &elapsed,sf::Sprite &s);
   bool set_visible=true;
-
-
+  int sets=0;
+  bool shooted=false;
+  int counter_=0;
+  int direction=0;
 
 
 
